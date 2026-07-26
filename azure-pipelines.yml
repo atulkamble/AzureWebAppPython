@@ -6,12 +6,17 @@ pool:
 
 variables:
   pythonVersion: "3.14"
-  RESOURCE_GROUP: "webapp" 
+  RESOURCE_GROUP: "webapp"
   WEB_APP_NAME: "pythonapp87696858"
   WEB_APP_PLAN: "ASP-webapp-b9dd"
   WEBSITE_LOCATION: "Canada Central"
 
 steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "$(pythonVersion)"
+    displayName: "Use Python $(pythonVersion)"
+
   - script: |
       python --version
       pip --version
@@ -28,7 +33,7 @@ steps:
       OutputFile: "appsettings.json"
     displayName: "Export App Configuration"
 
-  - task: ArchieveFiles@2
+  - task: ArchiveFiles@2
     inputs:
       rootFolderOrFile: "$(Build.SourcesDirectory)"
       includeRootFolder: false
@@ -37,10 +42,10 @@ steps:
       replaceExistingArchive: true
     displayName: "Archive Files"
 
-   - task: AzureWebApp@1
+  - task: AzureWebApp@1
     inputs:
       azureSubscription: "AzureWebAppPython"
       appType: "webAppLinux"
       appName: "$(WEB_APP_NAME)"
       package: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
-    displayName: "Deploy to Azure Web App" 
+    displayName: "Deploy to Azure Web App"
