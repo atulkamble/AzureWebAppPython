@@ -30,6 +30,7 @@ steps:
     inputs:
       ConnectedServiceName: "AzureWebAppPython"
       ConfigStoreName: "pythonapp87696858"
+      AppConfigurationEndpoint: "https://pythonapp87696858.azconfig.io"
       OutputFile: "appsettings.json"
     displayName: "Export App Configuration"
 
