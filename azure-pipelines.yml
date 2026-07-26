@@ -15,10 +15,10 @@ steps:
   displayName: 'Important dependency version check script'
 
 # Logs in securely using the pipeline secret variable
-- script: |
-    echo Logging into Docker Hub...
-    echo $(DOCKER_PASSWORD) | docker login -u mayurbarage --password-stdin
-  displayName: 'Docker Hub Login Script'
+# - script: |
+#     echo Logging into Docker Hub...
+#     echo $(DOCKER_PASSWORD) | docker login -u mayurbarage --password-stdin
+#   displayName: 'Docker Hub Login Script'
 
 - script: |
     echo Building docker image from dockerfile
