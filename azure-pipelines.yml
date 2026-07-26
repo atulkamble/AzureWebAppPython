@@ -4,6 +4,13 @@ trigger:
 pool:
   vmImage: "ubuntu-latest"
 
+variables:
+  pythonVersion: "3.14"
+  RESOURCE_GROUP: "webapp" 
+  WEB_APP_NAME: "pythonapp87696858"
+  WEB_APP_PLAN: "ASP-webapp-b9dd"
+  WEBSITE_LOCATION: "Canada Central"
+
 steps:
   - script: |
       python --version
@@ -14,7 +21,26 @@ steps:
       docker --version
     displayName: "Check Docker Version"
 
-  - script: |
-      docker build -t myapp:latest .
-      docker run -d -p 5000:5000 myapp:latest
-    displayName: "Build and Run Docker Container"
+  - task: AzureAppConfigurationExport@10
+    inputs:
+      ConnectedServiceName: "AzureWebAppPython"
+      ConfigStoreName: "pythonapp87696858"
+      OutputFile: "appsettings.json"
+    displayName: "Export App Configuration"
+
+  - task: ArchieveFiles@2
+    inputs:
+      rootFolderOrFile: "$(Build.SourcesDirectory)"
+      includeRootFolder: false
+      archiveType: "zip"
+      archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+      replaceExistingArchive: true
+    displayName: "Archive Files"
+
+   - task: AzureWebApp@1
+    inputs:
+      azureSubscription: "AzureWebAppPython"
+      appType: "webAppLinux"
+      appName: "$(WEB_APP_NAME)"
+      package: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+    displayName: "Deploy to Azure Web App" 
