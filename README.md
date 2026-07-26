@@ -1,4 +1,4 @@
-# Python Web Application
+# 🚀 Python Web Application
 
 A Flask-based web application built with Python 3.14.
 
