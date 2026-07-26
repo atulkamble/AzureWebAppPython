@@ -1,0 +1,43 @@
+# Basic pipeline example
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-24.04'
+
+steps:
+
+- script: |
+    echo Checking python docker and pip version
+    python --version
+    pip --version
+    docker --version
+  displayName: 'Important dependency version check script'
+
+# Logs in securely using the pipeline secret variable
+- script: |
+    echo Logging into Docker Hub...
+    echo $(DOCKER_PASSWORD) | docker login -u mayurbarage --password-stdin
+  displayName: 'Docker Hub Login Script'
+
+- script: |
+    echo Building docker image from dockerfile
+    docker build -t mayurbarage/azurewebappflask:latest .
+  displayName: 'Build docker script'
+
+- script: |
+    echo Pushing image
+    docker push mayurbarage/azurewebappflask:latest
+  displayName: 'Docker push stage'
+
+- script: |
+    echo Creating container
+    docker run -d -p 5000:5000 mayurbarage/azurewebappflask:latest
+  displayName: 'Creating a container'
+
+- script: |
+    echo Checking container and images
+    docker images
+    docker container ls
+    docker ps -a
+  displayName: 'Docker images and container script'
