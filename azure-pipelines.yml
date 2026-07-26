@@ -2,51 +2,29 @@ trigger:
   - main
 
 pool:
-  vmImage: "ubuntu-latest"
+  vmImage: 'ubuntu-latest'
 
 variables:
-  pythonVersion: "3.14"
-  RESOURCE_GROUP: "webapp"
-  WEB_APP_NAME: "pythonapp87696858"
-  WEB_APP_PLAN: "ASP-webapp-b9dd"
-  WEBSITE_LOCATION: "Canada Central"
+  RESOURCE_GROUP: 'webapp'
+  WEBAPP_NAME: 'pythonapp98600'
+  WEBAPP_PLAN: 'ASP-webapp-a324'
+  REGION: 'Canada Central'
+  azureSubscription: 'azurepythonapp'   # Azure DevOps Service Connection Name
 
 steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: "$(pythonVersion)"
-    displayName: "Use Python $(pythonVersion)"
-
-  - script: |
-      python --version
-      pip --version
-    displayName: "Check Python and Pip Versions"
-
-  - script: |
-      docker --version
-    displayName: "Check Docker Version"
-
-  - script: |
-      pip install --upgrade pip
-      pip install -r requirements.txt
-    displayName: "Install Python Dependencies"
-
   - task: ArchiveFiles@2
+    displayName: 'Archive Files'
     inputs:
-      rootFolderOrFile: "$(Build.SourcesDirectory)"
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
       includeRootFolder: false
-      archiveType: "zip"
-      archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
       replaceExistingArchive: true
-    displayName: "Archive Application Files"
 
   - task: AzureWebApp@1
+    displayName: 'Deploy to Azure Web App'
     inputs:
-      azureSubscription: "AzureWebAppPython"
-      appType: "webAppLinux"
-      appName: "$(WEB_APP_NAME)"
-      package: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
-      runtimeStack: "PYTHON|3.14"
-      startUpCommand: "gunicorn --bind=0.0.0.0 --timeout 600 app:app"
-      appSettings: -SCM_DO_BUILD_DURING_DEPLOYMENT true
-    displayName: "Deploy to Azure Web App"
+      azureSubscription: '$(azureSubscription)'
+      appType: 'webAppLinux'
+      appName: '$(WEBAPP_NAME)'
+      package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
