@@ -25,10 +25,10 @@ steps:
     docker build -t mayurbarage/azurewebappflask:latest .
   displayName: 'Build docker script'
 
-- script: |
-    echo Pushing image
-    docker push mayurbarage/azurewebappflask:latest
-  displayName: 'Docker push stage'
+# - script: |
+#     echo Pushing image
+#     docker push mayurbarage/azurewebappflask:latest
+#   displayName: 'Docker push stage'
 
 - script: |
     echo Creating container
