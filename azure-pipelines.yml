@@ -48,4 +48,5 @@ steps:
       package: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
       runtimeStack: "PYTHON|3.14"
       startUpCommand: "gunicorn --bind=0.0.0.0 --timeout 600 app:app"
+      appSettings: -SCM_DO_BUILD_DURING_DEPLOYMENT true
     displayName: "Deploy to Azure Web App"
