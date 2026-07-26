@@ -26,13 +26,10 @@ steps:
       docker --version
     displayName: "Check Docker Version"
 
-  - task: AzureAppConfigurationExport@10
-    inputs:
-      ConnectedServiceName: "AzureWebAppPython"
-      ConfigStoreName: "pythonapp87696858"
-      AppConfigurationEndpoint: "https://pythonapp87696858.azconfig.io"
-      OutputFile: "appsettings.json"
-    displayName: "Export App Configuration"
+  - script: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: "Install Python Dependencies"
 
   - task: ArchiveFiles@2
     inputs:
@@ -41,7 +38,7 @@ steps:
       archiveType: "zip"
       archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
       replaceExistingArchive: true
-    displayName: "Archive Files"
+    displayName: "Archive Application Files"
 
   - task: AzureWebApp@1
     inputs:
@@ -49,4 +46,6 @@ steps:
       appType: "webAppLinux"
       appName: "$(WEB_APP_NAME)"
       package: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+      runtimeStack: "PYTHON|3.14"
+      startUpCommand: "gunicorn --bind=0.0.0.0 --timeout 600 app:app"
     displayName: "Deploy to Azure Web App"
