@@ -63,4 +63,4 @@ jobs:
         with:
           app-name: 'demotcswebapp'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E51CE68E12244971AD074E45BDD8024B }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AC6F519FA70D4C09A2019EC7206DE32F }}
